@@ -5,7 +5,7 @@ import ch01.data.Play
 import ch01.data.PlayType
 import kotlin.math.floor
 
-abstract class PerformanceCalculator(protected open val performance: Performance, protected open val play: Play) {
+abstract class PerformanceCalculator(protected val performance: Performance, protected val play: Play) {
 
     companion object {
         fun createPerformanceCalculator(performance: Performance, play: Play): PerformanceCalculator {
