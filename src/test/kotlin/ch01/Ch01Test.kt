@@ -59,4 +59,14 @@ class Ch01Test {
         assertEquals(Ch01TestSupport.plainExpected, plainActual)
         assertEquals(Ch01TestSupport.htmlExpected, htmlActual)
     }
+
+    @Test
+    fun `Ch01-Code04 테스트`() {
+        val statement = ch01.sec08.Statement(invoice, plays)
+        val plainActual = statement.statement()
+        val htmlActual = statement.htmlStatement()
+
+        assertEquals(Ch01TestSupport.plainExpected, plainActual)
+        assertEquals(Ch01TestSupport.htmlExpected, htmlActual)
+    }
 }
