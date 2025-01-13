@@ -37,34 +37,26 @@ class Ch01Test {
 
     @Test
     fun `Ch01-Code01 테스트`() {
-        val expected: String = """
-            청구 내역 (고객명: BigCo)
-              Hamlet: ${'$'}650.00 (55석)
-              As You Like It: ${'$'}580.00 (35석)
-              Othello: ${'$'}500.00 (40석)
-            총액: ${'$'}1,730.00
-            적립 포인트: 47점
-        """.trimIndent()
-
         val actual = statement(invoice, plays)
 
-        assertEquals(expected, actual)
+        assertEquals(Ch01TestSupport.plainExpected, actual)
     }
 
     @Test
     fun `Ch01-Code02 테스트`() {
-        val expected: String = """
-            청구 내역 (고객명: BigCo)
-              Hamlet: ${'$'}650.00 (55석)
-              As You Like It: ${'$'}580.00 (35석)
-              Othello: ${'$'}500.00 (40석)
-            총액: ${'$'}1,730.00
-            적립 포인트: 47점
-        """.trimIndent()
-
         val statement = Statement(invoice, plays)
         val actual = statement.statement()
 
-        assertEquals(expected, actual)
+        assertEquals(Ch01TestSupport.plainExpected, actual)
+    }
+
+    @Test
+    fun `Ch01-Code03 테스트`() {
+        val statement = ch01.sec06.Statement(invoice, plays)
+        val plainActual = statement.statement()
+        val htmlActual = statement.htmlStatement()
+
+        assertEquals(Ch01TestSupport.plainExpected, plainActual)
+        assertEquals(Ch01TestSupport.htmlExpected, htmlActual)
     }
 }
