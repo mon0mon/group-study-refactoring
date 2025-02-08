@@ -1,5 +1,38 @@
 # Chapter 3 코드에서 나는 악취
 
+<details>
+<summary>목차</summary>
+
+<!-- TOC -->
+* [Chapter 3 코드에서 나는 악취](#chapter-3-코드에서-나는-악취)
+  * [3.1 기이한 이름 (Mysterious Name)](#31-기이한-이름-mysterious-name)
+  * [3.2 중복 코드 (Duplicated Code)](#32-중복-코드-duplicated-code)
+  * [3.3 긴 함수 (Long Function)](#33-긴-함수-long-function)
+  * [3.4 긴 매개변수 목록 (Long Parameter List)](#34-긴-매개변수-목록-long-parameter-list)
+  * [3.5 전역 데이터 (Global Data)](#35-전역-데이터-global-data)
+  * [3.6 가변 데이터 (Mutable Data)](#36-가변-데이터-mutable-data)
+  * [3.7 뒤엉킨 변경 (Divergent Change)](#37-뒤엉킨-변경-divergent-change)
+  * [3.8 산탄총 수술 (Shotgun Surgery)](#38-산탄총-수술-shotgun-surgery)
+  * [3.9 기능 편애 (Feature Envy)](#39-기능-편애-feature-envy)
+  * [3.10 데이터 뭉치 (Data Clumps)](#310-데이터-뭉치-data-clumps)
+  * [3.11 기본형 집착 (Primitive Obsession)](#311-기본형-집착-primitive-obsession)
+  * [3.12 반복되는 switch 문 (Repeated Switches)](#312-반복되는-switch-문-repeated-switches)
+  * [3.13 반복문 (Loops)](#313-반복문-loops)
+  * [3.14 성의 없는 요소 (Lazy Element)](#314-성의-없는-요소-lazy-element)
+  * [3.15 추측성 일반화 (Speculative Generality)](#315-추측성-일반화-speculative-generality)
+  * [3.16 임시 필드 (Temporary Field)](#316-임시-필드-temporary-field)
+  * [3.17 메시지 체인 (Message Chains)](#317-메시지-체인-message-chains)
+  * [3.18 중개자 (Middle Man)](#318-중개자-middle-man)
+  * [3.19 내부자 거래 (Insider Trading)](#319-내부자-거래-insider-trading)
+  * [3.20 거대한 클래스 (Large Class)](#320-거대한-클래스-large-class)
+  * [3.21 서로 다른 인터페이스의 대안 클래스들 (Alternative Classes with Different Interfaces)](#321-서로-다른-인터페이스의-대안-클래스들-alternative-classes-with-different-interfaces)
+  * [3.22 데이터 클래스 (Data Class)](#322-데이터-클래스-data-class)
+* [3.23 상속 포기 (Refused Bequest)](#323-상속-포기-refused-bequest)
+  * [3.24 주석 (Comments)](#324-주석-comments)
+<!-- TOC -->
+
+</details>
+
 | 냄새(Smell)
 
 리팩터링할 '시점'을 설명하는데 사용되는 비유<br>
