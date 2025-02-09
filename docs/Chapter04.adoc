@@ -8,7 +8,7 @@
 :author: "mon0mon"
 :hardbreaks:
 
-= Chapter 4 테스트 구축하기
+= Chapter 4. 테스트 구축하기
 
 리팩터링은 분명 가치 있는 도구이지만, 제대로 효과를 보기위해서는 테스트 스위트(Test suite)가 뒷받침되어야 한다
 

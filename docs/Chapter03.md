@@ -1,4 +1,4 @@
-# Chapter 3 코드에서 나는 악취
+# Chapter 3. 코드에서 나는 악취
 
 <details>
 <summary>목차</summary>

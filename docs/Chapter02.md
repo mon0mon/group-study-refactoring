@@ -1,4 +1,4 @@
-# Chapter 2 리팩터링 원칙
+# Chapter 2. 리팩터링 원칙
 
 <details>
 <summary>목차</summary>
