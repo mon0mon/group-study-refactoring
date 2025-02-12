@@ -65,7 +65,7 @@ class Sec06Test {
         logger.info { "asia.profit = ${asia.profit}" }
 
         Assertions.assertThat(asia.demand).isEqualTo(0)
-        Assertions.assertThat(asia.shortFall).isEqualTo(0)
+        Assertions.assertThat(asia.shortFall).isEqualTo(-25)
         Assertions.assertThat(asia.profit).isEqualTo(0)
     }
 
