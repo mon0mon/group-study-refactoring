@@ -1,0 +1,54 @@
+:toc:
+:doctype: book
+:icons: font
+:icon-set: font-awesome
+:source-highlighter: highlightjs
+:toclevels: 4
+:sectlinks:
+:author: "mon0mon"
+:hardbreaks:
+
+== 6.4 변수 인라인하기 (Inline Variable)
+
+> 반대 리팩터링: 변수 추출하기^6.3절^
+> 1판에서의 이름 : 임시변수 내용 직접 삽입
+
+[open]
+.리팩토링 이전
+--
+[source,kotlin]
+----
+fun unnamedFunction(anOrder: Order): Boolean {
+    val basePrice = anOrder.basePrice
+
+    return basePrice > 1_000
+}
+----
+--
+
+[open]
+.리팩토링 이후
+--
+[source,kotlin]
+----
+fun unnamedFunction(anOrder: Order): Boolean {
+    return anOrder.basePrice > 1_000
+}
+----
+--
+
+### 배경
+
+변수의 이름이 본래의 표현식과 다를 바 없거나, 변수 자체가 리팩터링에 방해가 될 때 진행
+
+
+### 절차
+
+. 대입문의 우변(표현식)에서 부작용이 생기지는 않는지 확인
+. 변수가 불변으로 선언되지 않았다면 불변으로 만든 후 테스트
+* 변수에 값이 한번만 대입되는지 확인 가능
+. 이 변수를 가장 처음 사용하는 코드를 찾아서 대입문 우변의 코드로 바꿈
+. 테스트
+. 변수를 사용하는 부분을 모두 교체할 때까지 이 과정을 반복
+. 변수 선언문과 대입문을 지움
+. 테스트
