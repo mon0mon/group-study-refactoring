@@ -1,0 +1,102 @@
+:toc:
+:doctype: book
+:icons: font
+:icon-set: font-awesome
+:source-highlighter: highlightjs
+:toclevels: 4
+:sectlinks:
+:author: "mon0mon"
+:hardbreaks:
+
+== 6.3 변수 추출하기 (Extract Variable)
+
+> 반대 리팩터링: 변수 인라인하기^6.4절^
+> 1판에서의 이름 : 직관적 임시변수 사용
+
+[open]
+.리팩토링 이전
+--
+[source,kotlin]
+----
+fun price(order: Order): Double {
+    return (order.quantity * order.itemPrice - 0.coerceAtLeast(order.quantity - 50)
+            * order.itemPrice * 0.05 + 100.0.coerceAtMost(order.quantity * order.itemPrice * 0.1))
+}
+----
+--
+
+[open]
+.리팩토링 이후
+--
+[source,kotlin]
+----
+fun price(order: Order): Double {
+    val basePrice = order.quantity * order.itemPrice
+    val quantityDiscount = 0.coerceAtLeast(order.quantity - 50) * order.itemPrice * 0.05
+    val shipping = 100.0.coerceAtMost(basePrice * 0.1)
+
+    return basePrice - quantityDiscount + shipping
+}
+----
+--
+
+### 배경
+
+복잡한 표현식에는 지역 변수를 활용하기
+
+* 표현식을 쪼개서 관리
+* 로직 구성 단계에 이름을 붙일 수 있음
+* 코드의 목적을 명확히 드러냄
+* 디버깅 시에도 이점
+
+변수 추출을 결정했다면, 이름 붙일 문맥도 살펴야 함
+
+* 함수를 벗어난 넓은 문맥에서까지 의미가 되는 경우에는 함수로 추출해야 함
+
+이름이 통용되는 문맥을 넓힐 때의 단점을 일이 늘어나는 것
+
+* 임시 변수를 질의 함수로 바꾸기^7.4절^을 적용
+* 클래스 안의 코드를 다룰 때는 함수 추출하기^6.1절^ 적용
+
+### 절차
+
+. 추출하려는 표현식에 부작용이 없는지 확인
+. 불변 변수를 하나 선언하고 이름 붙일 표현식의 복제본을 대입한다
+. 원본 표현식을 새로 만든 변수로 교체한다
+. 테스트한다
+. 표현식을 여러 곳에서 사용한다면 각각을 새로 만든 변수로 교체한다
+* 교체할 때마다 테스트 진행
+
+### 예시
+
+[open]
+.리팩토링 이전
+--
+[source,kotlin]
+----
+fun price(order: Order): Double {
+    return (order.quantity * order.itemPrice - 0.coerceAtLeast(order.quantity - 50)
+            * order.itemPrice * 0.05 + 100.0.coerceAtMost(order.quantity * order.itemPrice * 0.1))
+}
+----
+--
+
+[open]
+.리팩토링 이후
+--
+[source,kotlin]
+----
+fun price(order: Order): Double {
+    val basePrice = order.quantity * order.itemPrice
+    val quantityDiscount = 0.coerceAtLeast(order.quantity - 50) * order.itemPrice * 0.05
+    val shipping = 100.0.coerceAtMost(basePrice * 0.1)
+
+    return basePrice - quantityDiscount + shipping
+}
+----
+--
+
+변수 추출을 통해, 가격과 구성하는 값들을 변수로 구분하기
+
+
+include::../subsections/ch06/03/ch0603_01.adoc[]

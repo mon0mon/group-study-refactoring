@@ -9,7 +9,9 @@ data class Invoice(
 )
 
 data class Order(
-    val amount: Int
+    val amount: Int,
+    val quantity: Int,
+    val itemPrice: Int
 )
 
 data class Driver(

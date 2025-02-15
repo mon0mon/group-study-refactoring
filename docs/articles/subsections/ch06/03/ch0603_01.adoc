@@ -1,0 +1,53 @@
+:toc:
+:doctype: book
+:icons: font
+:icon-set: font-awesome
+:source-highlighter: highlightjs
+:toclevels: 4
+:sectlinks:
+:author: "mon0mon"
+:hardbreaks:
+
+#### 예시: 클래스 안에서
+
+[open]
+리팩터링 전
+--
+[source,kotlin]
+----
+data class Order_Old(
+    val quantity: Int,
+    val itemPrice: Int
+) {
+    val price: Double
+    get() {
+        return (this.quantity * this.itemPrice - 0.coerceAtLeast(this.quantity - 50)
+            * this.itemPrice * 0.05 + 100.0.coerceAtMost(this.quantity * this.itemPrice * 0.1))
+    }
+}
+----
+--
+
+[open]
+리팩터링 후
+--
+[source,kotlin]
+----
+data class Order_Refacotred(
+    val quantity: Int,
+    val itemPrice: Int
+) {
+    val basePrice: Int
+        get() = this.quantity * this.itemPrice
+    val quantityDiscount: Double
+        get() = 0.coerceAtLeast(this.quantity - 50) * this.itemPrice * 0.05
+    val shipping: Double
+        get() = 100.0.coerceAtMost(this.basePrice * 0.1)
+    val price: Double
+        get() = this.basePrice - this.quantityDiscount + this.shipping
+}
+----
+--
+
+객체는 특정 로직과 데이터를 외부와 공유하려 할 때, 공유할 정보를 설명해주는 적당한 크기의 문맥
+덩치가 큰 클래스에서 공통 동작을 별도 이름으로 뽑아내서 추상화 해두면 유용
