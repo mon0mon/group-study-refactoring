@@ -11,3 +11,12 @@ data class Invoice(
 data class Order(
     val amount: Int
 )
+
+data class Driver(
+    val numberOfLateDeliveries: Int
+)
+
+data class Customer(
+    val name: String,
+    val location: String
+)
