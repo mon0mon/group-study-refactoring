@@ -1,0 +1,52 @@
+:toc:
+:doctype: book
+:icons: font
+:icon-set: font-awesome
+:source-highlighter: highlightjs
+:toclevels: 4
+:sectlinks:
+:author: "mon0mon"
+:hardbreaks:
+
+#### 예시: 매개변수 추가하기
+
+[open]
+리팩터링 전
+--
+[source,kotlin]
+----
+data class Book(
+    val reservations: MutableList<Customer>
+) {
+    fun addReservation_Old(customer: Customer) {
+        this.reservations.add(customer)
+    }
+}
+----
+--
+
+[open]
+리팩터링 후
+--
+[source,kotlin]
+----
+data class Book(
+    val reservations: MutableList<Customer>
+) {
+    fun addReservation_Old(customer: Customer) {
+        this.reservations.add(customer)
+    }
+
+    fun addReservation_Refactored(customer: Customer, isPriority: Boolean) {
+        require(isPriority || !isPriority)
+        this.reservations.add(customer)
+    }
+}
+----
+--
+
+. addReservation() 본문을 새로운 함수로 추출^6.1절^
+* 새로운 함수에 임시 이름을 붙이기
+. 새 함수의 선언문과 호출문에 원하는 매개변수 추가
+. 기존 함수를 인라인^6.2절^하여 호출 코드들이 새 함수를 이용하도록 수정
+. 새 함수 이름을 기존 함수의 이름으로 변경

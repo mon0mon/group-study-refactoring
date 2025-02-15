@@ -1,0 +1,36 @@
+:toc:
+:doctype: book
+:icons: font
+:icon-set: font-awesome
+:source-highlighter: highlightjs
+:toclevels: 4
+:sectlinks:
+:author: "mon0mon"
+:hardbreaks:
+
+#### 예시: 매개변수를 속성으로 바꾸기
+
+[open]
+리팩터링 전
+--
+[source,kotlin]
+----
+fun inNewEngland(customer: Customer): Boolean {
+    return listOf("MA", "CT", "ME", "VT", "NH", "RI").contains(customer.address.state)
+}
+----
+--
+
+[open]
+리팩터링 후
+--
+[source,kotlin]
+----
+fun inNewEngland(stateCode: String): Boolean {
+    return listOf("MA", "CT", "ME", "VT", "NH", "RI").contains(stateCode)
+}
+----
+--
+
+inNewEngland() 함수에서 매개변수로 Customer가 아닌, 주 식별코드를 받도록 리팩터링
+

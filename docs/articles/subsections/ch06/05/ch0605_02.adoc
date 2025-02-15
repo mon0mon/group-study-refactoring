@@ -1,0 +1,46 @@
+:toc:
+:doctype: book
+:icons: font
+:icon-set: font-awesome
+:source-highlighter: highlightjs
+:toclevels: 4
+:sectlinks:
+:author: "mon0mon"
+:hardbreaks:
+
+#### 예시: 함수 이름 바꾸기(마이그레이션 절차)
+
+[open]
+리팩터링 전
+--
+[source,kotlin]
+----
+private fun circum(radius: Double): Double {
+    return 2 * Math.PI * radius
+}
+----
+--
+
+[open]
+리팩터링 후
+--
+[source,kotlin]
+----
+private fun circumference(radius: Double): Double {
+    return 2 * Math.PI * radius
+}
+----
+--
+
+. 함수 본문 전체를 새로운 함수로 추출^6.1절^
+. 수정한 코드 테스트
+. 예전 함수로 인라인^6.2절^
+. 변경사항에 대해서 테스트 진행
+. 모든 변경사항을 적용한 이후에는 기존 함수 삭제
+
+함수 선언 바꾸기는 변경 불가한 외부 코드를 사용하는 부분을 리팩터링 하기 적절
+
+. circum()를 폐기 예정(deprecation)으로 표기
+. circum()의 클라이언트들 모두가 circumference()를 사용할 때까지 대기
+. circum() 삭제
+

@@ -11,3 +11,11 @@
 = Chapter 6. 기본적인 리팩터링
 
 include::articles/ch06/ch0601.adoc[]
+
+include::articles/ch06/ch0602.adoc[]
+
+include::articles/ch06/ch0603.adoc[]
+
+include::articles/ch06/ch0604.adoc[]
+
+include::articles/ch06/ch0605.adoc[]

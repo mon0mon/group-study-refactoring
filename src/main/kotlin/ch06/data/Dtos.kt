@@ -29,5 +29,10 @@ data class Driver(
 
 data class Customer(
     val name: String,
-    val location: String
+    val location: String,
+    val address:  Address
+)
+
+data class Address(
+    val state: String
 )
