@@ -1,0 +1,13 @@
+:toc:
+:doctype: book
+:icons: font
+:icon-set: font-awesome
+:source-highlighter: highlightjs
+:toclevels: 4
+:sectlinks:
+:author: "mon0mon"
+:hardbreaks:
+
+= Chapter 6. 기본적인 리팩터링
+
+include::articles/ch06/ch0601.adoc[]

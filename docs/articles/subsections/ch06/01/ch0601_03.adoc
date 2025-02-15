@@ -1,0 +1,72 @@
+:toc:
+:doctype: book
+:icons: font
+:icon-set: font-awesome
+:source-highlighter: highlightjs
+:toclevels: 4
+:sectlinks:
+:author: "mon0mon"
+:hardbreaks:
+
+#### 지역 변수의 값을 변경할 때
+
+매개변수에 값을 대입하는 코드가 있을 경우, 변수를 쪼개서^9.1절^ 임시 변수를 만들어 대입하기
+
+.대입 대상이 되는 임시 변수
+. 변수가 추출된 코드 안에서만 사용될 때
+* 변수는 추출된 코드에서만 존재해야 함
+* 문장 슬라이드하기^6.8절^을 활용해서, 한 곳에 모아두기
+. 변수가 추출한 함수 밖에서 사용될 때
+
+[open]
+.리팩터링 전
+--
+[source,kotlin]
+----
+fun printOwing(invoice: Invoice) {
+    var outstanding = 0
+
+    //  배너 출력 로직을 함수로 추출
+    printBanner()
+
+    //  미해결 채무(outstanding)를 계산한다.
+    outstanding = invoice.orders.sumOf { it.amount }
+
+    //  마감일 설정 로직을 함수로 추출
+    recordDueDate(invoice)
+
+    //  세부 사항을 출력을 함수로 추출
+    printDetails(invoice, outstanding)
+}
+----
+--
+
+[open]
+.리팩터링 후
+--
+[source,kotlin]
+----
+fun printOwing(invoice: Invoice) {
+    //  배너 출력 로직을 함수로 추출
+    printBanner()
+
+    //  원본 변수를 불변으로 수정
+    val outstanding = calculateOutstanding(invoice)
+
+    //  마감일 설정 로직을 함수로 추출
+    recordDueDate(invoice)
+
+    //  세부 사항을 출력을 함수로 추출
+    printDetails(invoice, outstanding)
+}
+
+fun calculateOutstanding(invoice: Invoice) = invoice.orders.sumOf { it.amount }
+----
+--
+
+.단계를 나누어서 진행
+. 선언문을 변수가 사용되는 코드로 슬라이드
+. 추출할 부분을 새로운 함수로 복사
+. 값이 변경된 변수를 반환
+. 컴파일 진행
+. 원본 코드에서, 추출한 함수를 호출하도록 수정
