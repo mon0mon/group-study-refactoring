@@ -24,6 +24,7 @@ data class Order(
         get() = 100.0.coerceAtMost(this.basePrice * 0.1)
     val price: Double
         get() = this.basePrice - this.quantityDiscount + this.shipping
+    val status: String = ""
 }
 
 data class Driver(

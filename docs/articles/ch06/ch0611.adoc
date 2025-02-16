@@ -1,0 +1,154 @@
+:toc:
+:doctype: book
+:icons: font
+:icon-set: font-awesome
+:source-highlighter: highlightjs
+:toclevels: 4
+:sectlinks:
+:author: "mon0mon"
+:hardbreaks:
+
+== 6.11 단계 쪼개기 (Split Phase)
+
+[open]
+.리팩토링 이전
+--
+[source,js]
+----
+const orderData = orderString.split(/\s+/);
+const productPrice = priceList[orderData[0].split("-")[1]];
+const orderPrice = parseInt(orderData[1]) * productPrice;
+----
+--
+
+[open]
+.리팩토링 이후
+--
+[source,js]
+----
+const orderRecord = parseOrder(order);
+const orderPrice = price(orderRecord, priceList);
+
+function parseOrder(aString) {
+    const values = aString.split(/\s+/)
+    return ({
+        productID: values[0].split("-")[1],
+        quantity: parseInt(values[1])
+    })
+}
+
+function price(order, priceList) {
+    return order.quantity * priceList[order.productID];
+}
+----
+--
+
+### 배경
+
+서로 다른 두 대상을 한꺼번에 다루는 코드르 발견하면 각각을 별개 모듈로 나누기
+가장 간편한 분리하는 방법으로는 동작을 연이은 두 단계들로 쪼개는 것이다
+
+.단계
+. 본 작업에 들어가기 전에 입력값을 다루기 편한 형태로 가공
+. 로직을 순차적인 단계로 분리
+
+로직을 순차적인 단계로 처리 하되, 각 단계에서는 서로 확연히 다른 일을 수행해야한다
+가장 대표적인 예시는 컴파일러가 있다
+
+* 각 단계는 자신만의 문제에 집중하기 때문에, 다른 단계에 대해 자세히 알지 않아도 된다
+
+단계 쪼개기는 주로 큰 규모의 소프트웨어에 적용되곤 하지만, 규모와 관계없이 적용하는 것도 좋다
+
+
+### 절차
+
+. 두 번째 단계에 해당하는 코드를 독립 함수로 추출한다
+. 테스트
+. 중간 데이터 구조를 만들어 앞에서 추출한 함수의 인수로 추가한다
+. 테스트
+. 추출한 두 번째 단계 함수의 매개변수를 하나씩 검토한다. 그 중 첫 번째 단계에서 사용되는 것은 중간 데이터 구조로 옮긴다.
+* 간혹 두 번째 단계에서 사용하면 안되는 매개변수가 있다. 이럴 때는 각 매개변수를 사용한 결과를 중간 데이터 구조의 필드로 추출하고, 이 필드의 값을 설정하는 문자을 호출한 곳으로 옮긴다^8.4절^
+
+. 첫 번째 단계 코드를 함수로 추출^6.1절^하면서 중간 데이터 구조를 반환하도록 만든다.
+* 첫 번째 단계를 변환기(transformer) 객체로 추출해도 좋음
+
+
+[#_예시]
+### 예시
+
+[open]
+.리팩터링 전
+--
+[source,kotlin]
+----
+private fun main(args: Array<String>) {
+    try {
+        if (args.size == 0) throw RuntimeException("파일명을 입력하세요.")
+
+        var filename = args[args.size - 1]
+        val input = Paths.get(filename).toFile()
+
+        val mapper = ObjectMapper()
+        val orders = mapper.readValue(input, Array<Order>::class.java)
+
+        if (Stream.of(args).anyMatch { arg -> "-r".equals(arg) })
+            logger.info { orders.filter { o -> "ready".equals(o.status) }.count() }
+        else
+            logger.info { orders.size }
+    } catch (e: Exception) {
+        logger.error { e }
+    }
+}
+----
+--
+
+[open]
+.리팩터링 후
+--
+[source,kotlin]
+----
+private fun run(args: Array<String>): Int {
+    return countOrders(commandLine = CommandLine.parse(args))
+}
+
+private fun countOrders(commandLine: CommandLine): Int {
+    val input = Paths.get(commandLine.filename).toFile()
+
+    val mapper = ObjectMapper()
+    val orders = mapper.readValue(input, Array<Order>::class.java)
+
+    if (commandLine.onlyCountReady)
+        return orders.filter { o -> "ready".equals(o.status) }.count()
+    else
+        return orders.size
+}
+
+class CommandLine(
+    val filename: String,
+    val onlyCountReady: Boolean = true
+) {
+    companion object {
+        fun parse(args: Array<String>): CommandLine {
+            require (args.isNotEmpty()) { throw RuntimeException("파일명을 입력하세요.") }
+
+            return CommandLine(
+                filename = args[args.size - 1],
+                onlyCountReady = Stream.of(args).anyMatch { arg -> "-r".equals(arg) }
+            )
+        }
+    }
+}
+----
+--
+
+.코드 역할
+. 주문 목록을 읽고 개수를 세기
+. 명령줄 인수를 담은 배열을 읽어서 프로그램 동작을 결정
+
+> 단계 쪼개기 리팩터링의 대상
+
+.리팩터링
+. 명령줄 인수의 구문을 분석해서 의미 추출
+. 추출된 정보를 이용하여 데이터를 적절히 가공
+
+include::../subsections/ch06/11/ch0611_01.adoc[]

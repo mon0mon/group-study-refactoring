@@ -1,0 +1,86 @@
+:toc:
+:doctype: book
+:icons: font
+:icon-set: font-awesome
+:source-highlighter: highlightjs
+:toclevels: 4
+:sectlinks:
+:author: "mon0mon"
+:hardbreaks:
+
+#### 예시: 첫 번째 단계에 변환기 사용하기(자바)
+
+[open]
+.리팩터링 전
+--
+[source,kotlin]
+----
+fun run(args: Array<String>): Int {
+    return countOrders(commandLine = CommandLine.parse(args))
+}
+
+fun countOrders(commandLine: CommandLine): Int {
+    val input = Paths.get(commandLine.filename).toFile()
+
+    val mapper = ObjectMapper()
+    val orders = mapper.readValue(input, Array<Order>::class.java)
+
+    if (commandLine.onlyCountReady)
+        return orders.filter { o -> "ready".equals(o.status) }.count()
+    else
+        return orders.size
+}
+
+class CommandLine(
+    val filename: String,
+    val onlyCountReady: Boolean = true
+) {
+companion object {
+    fun parse(args: Array<String>): CommandLine {
+        require (args.isNotEmpty()) { throw RuntimeException("파일명을 입력하세요.") }
+
+            return CommandLine(
+                filename = args[args.size - 1],
+                onlyCountReady = Stream.of(args).anyMatch { arg -> "-r".equals(arg) }
+            )
+        }
+    }
+}
+----
+--
+
+[open]
+.리팩터링 후
+--
+[source,kotlin]
+----
+fun run(args: Array<String>): Int {
+    return countOrders(commandLine = CommandLine2(args))
+}
+
+fun countOrders(commandLine: CommandLine2): Int {
+    val input = Paths.get(commandLine.filename).toFile()
+
+    val mapper = ObjectMapper()
+    val orders = mapper.readValue(input, Array<Order>::class.java)
+
+    if (commandLine.onlyCountReady)
+        return orders.filter { o -> "ready".equals(o.status) }.count()
+    else
+        return orders.size
+}
+
+class CommandLine(
+    args: Array<String>
+) {
+    val filename: String = args[args.size - 1]
+    val onlyCountReady: Boolean = Stream.of(args).anyMatch { arg -> "-r".equals(arg) }
+
+    init {
+        require(args.isNotEmpty()) { "파일명을 입력하세요" }
+    }
+}
+----
+--
+
+핵심은 단계를 명확히 분리하는 데 있음
