@@ -11,7 +11,7 @@
 #### 예시: 클래스 안에서
 
 [open]
-리팩터링 전
+.리팩터링 전
 --
 [source,kotlin]
 ----
@@ -29,7 +29,7 @@ data class Order_Old(
 --
 
 [open]
-리팩터링 후
+.리팩터링 후
 --
 [source,kotlin]
 ----

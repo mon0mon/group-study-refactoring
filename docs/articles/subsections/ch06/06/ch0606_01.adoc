@@ -11,7 +11,7 @@
 #### 예시: 값 캡슐화하기
 
 [open]
-리팩터링 전
+.리팩터링 전
 --
 [source,js]
 ----
@@ -25,7 +25,7 @@ assert.equal("파슨스", owner1.lastName, "owner2를 변경한 후");
 --
 
 [open]
-리팩터링 후
+.리팩터링 후
 --
 [source,js]
 ----

@@ -19,3 +19,15 @@ include::articles/ch06/ch0603.adoc[]
 include::articles/ch06/ch0604.adoc[]
 
 include::articles/ch06/ch0605.adoc[]
+
+include::articles/ch06/ch0606.adoc[]
+
+include::articles/ch06/ch0607.adoc[]
+
+include::articles/ch06/ch0608.adoc[]
+
+include::articles/ch06/ch0609.adoc[]
+
+include::articles/ch06/ch0610.adoc[]
+
+include::articles/ch06/ch0611.adoc[]

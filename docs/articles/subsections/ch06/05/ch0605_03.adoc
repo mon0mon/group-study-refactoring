@@ -11,7 +11,7 @@
 #### 예시: 매개변수 추가하기
 
 [open]
-리팩터링 전
+.리팩터링 전
 --
 [source,kotlin]
 ----
@@ -26,7 +26,7 @@ data class Book(
 --
 
 [open]
-리팩터링 후
+.리팩터링 후
 --
 [source,kotlin]
 ----
