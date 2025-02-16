@@ -1,0 +1,62 @@
+:toc:
+:doctype: book
+:icons: font
+:icon-set: font-awesome
+:source-highlighter: highlightjs
+:toclevels: 4
+:sectlinks:
+:author: "mon0mon"
+:hardbreaks:
+
+#### 예시: 값 캡슐화하기
+
+[open]
+리팩터링 전
+--
+[source,js]
+----
+const owner1 = defaultOwner();
+assert.equal("파울러", owner1.lastName, "처음 값 확인");
+const owner2 = defaultOwner();
+owner2.lastName = "파슨스";
+//  성공할까?
+assert.equal("파슨스", owner1.lastName, "owner2를 변경한 후");
+----
+--
+
+[open]
+리팩터링 후
+--
+[source,js]
+----
+let defaultOwner = { firstName: "마틴", lastName: "파울러" };
+export function getDefaultOwner() { return defaultOwner; }
+export function setDefaultOwner(arg) { defaultOwner = arg; }
+
+class Person {
+    constructor(data) {
+        this._lastName = data.lastName
+        this._firstName = data.firstName
+    }
+
+    get lastName() { return this._lastName; }
+    set firstName() { return this._firstName; }
+}
+----
+--
+
+기본 캡슐화 기법을 사용했을 때, 데이터 접근이나 대입을 제어할 수 있지만, 필드 값을 변경하는 일은 제어할 수 없음
+
+NOTE: defaultOwner()가 같은 객체를 반환하도록 되어있으므로, 위 코드는 동작
+
+이 문제를 해결하기 위해서는, 게터가 데이터의 복제본을 반환하도록 수정
+
+* 레코드 캡슐화하기^7.1절^
+
+상황에 따라서 변경하는 부분을 제거하거나, 적절한 변경 함수를 제공할 수 있음
+데이터 원본을 수정한 이후에 게터가 복제본을 반환하도록 할 수도 있음
+
+데이터를 복제해서 사용하는 경우 여러 부작용을 방지할 수 있음
+원본 데이터 변경 시, 이를 디버깅하기는 무척 어렵고 시간이 소모되는 일
+
+데이터 사용 범위가 넓을 수록 적절히 캡슐화하는 것이 중요

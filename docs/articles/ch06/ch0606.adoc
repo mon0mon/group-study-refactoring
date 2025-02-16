@@ -1,0 +1,117 @@
+:toc:
+:doctype: book
+:icons: font
+:icon-set: font-awesome
+:source-highlighter: highlightjs
+:toclevels: 4
+:sectlinks:
+:author: "mon0mon"
+:hardbreaks:
+
+== 6.6 변수 캡슐화 하기 (Encapsulate Variable)
+
+> 1판에서의 이름 : 필드 자체 캡슐화, 필드 캡슐화
+
+[open]
+.리팩토링 이전
+--
+[source,kotlin]
+----
+var defaultOwner = Person(firstName = "마틴", lastName = "파울러")
+----
+--
+
+[open]
+.리팩토링 이후
+--
+[source,kotlin]
+----
+class unnamedClass {
+    var defaultOwner: Person = Person(firstName = "마틴", lastName = "파울러")
+        get() {
+            // 추가 로직 삽입
+
+            return field
+        }
+        set(value) {
+            // 추가 로직 삽입
+
+            field = value
+        }
+}
+----
+--
+
+### 배경
+
+함수는 데이터보다 다루기 수월함
+함수는 호출하는 방식으로 사용되며, 함수의 이름을 변경하거나, 다른 모듈로 옮기는 건 어렵지 않음
+
+* 기존의 함수를 둔 채로, 전달 (forward) 함수를 활용할 수 있기 때문
+** 예전 코드 -> 기존 함수 -> 리팩터링된 함수
+
+데이터는 함수에 비해 다루기 까다로운 이유는 전달 함수 방식처럼 사용할 수 없기 때문
+데이터는 참조하는 모든 범위를 한 번에 바꿔야 코드가 제대로 동작함
+유효범위가 넓어질수록 다루기 어려워지며, 이는 특히 전역 데이터에서 그러함
+
+접근할 수 있는 범위가 넓은 데이터를 옮길 때는, 먼저 그 데이터로의 접근을 독점하는 함수로 만드는 방식이 가장 좋음 (데이터 캡슐화)
+데이터 재구성 대신 함수 재구성이라는 더 단순한 작업으로 변환
+
+데이터 캡슐화는 다른 경우에도 도움을 줌
+데이터를 변경하고 사용하는 코드를 감시할 수 있는 확실한 통로가 되어주기 때문
+데이터 변경 전 검증이나 변경 후 추가 로직을 쉽게 추가할 수 있음
+
+유효 범위가 함수 하나보다 넓은 가변 데이터를 위와 같은 방식으로 캡슐화 하는 것을 권장::
+데이터 결합도가 높아지지 않도록 방지
+
+객체 지향에서 객체 데이터를 항상 private으로 유지해야하는 이유와 연결됨
+public 필드를 캡슐화하여 가시 범위를 제한 (필드 캡슐화하기)
+
+클래스 내부에서도 접근자를 통해서 접근하도록 하는 자가 캡슐화(self-encapsulation)을 하자는 의견도 존재
+
+불변 데이터에서는 가변 데이터에 비해, 캡슐화 할 이유가 적음
+데이터가 변경된 일이 없기 때문에, 검증과 같은 로직을 추가할 필요가 없음
+불변성은 강력한 방부제와 같음
+
+
+### 절차
+
+. 변수로의 접근과 갱신을 전담하는 캡슐화 함수를 만듦
+. 정적 검사 수행
+. 변수를 직접 참조하던 부분을 모두 적절한 캡슐화 함수 호출로 변경
+* 변경 시마다 테스트
+
+. 변수의 접근 범위를 제한
+* 변수로의 직접 찾을 때는 변수의 이름을 바꿔서 테스트 해보면 쉽게 찾을 수 있음
+
+. 테스트
+. 변수 값이 레코드라면 레코드 캡슐화하기^7.1절^을 적용할지 고려해보기
+
+
+### 예시
+
+[open]
+리팩터링 전
+--
+[source,js]
+----
+let defaultOwner = { firstName: "마틴", lastName: "파울러" };
+----
+--
+
+[open]
+리팩터링 후
+--
+[source,js]
+----
+let defaultOwner = { firstName: "마틴", lastName: "파울러" };
+export function getDefaultOwner() { return defaultOwner; }
+export function setDefaultOwner(arg) { defaultOwner = arg; }
+----
+--
+
+변수에 이름을 \_privateOnly_ 와 같은 접두사나 접미어를 통해 공개용이 아니라는 의미를 남겨두면 좋음
+
+* python이나 오래된 JS에서는 언더스코어 (`-`) 를 사용해서 접근 제어를 나타내곤 했음
+
+include::../subsections/ch06/06/ch0606_01.adoc[]

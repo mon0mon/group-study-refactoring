@@ -36,3 +36,8 @@ data class Customer(
 data class Address(
     val state: String
 )
+
+data class Person(
+    val firstName: String,
+    val lastName: String
+)
