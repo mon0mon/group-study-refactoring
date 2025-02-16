@@ -69,3 +69,18 @@ data class NumberRange(
 ) {
     fun contains(value: Int): Boolean = (value >= this.min) && (value <= this.max)
 }
+
+private fun baseRate(month: Int, year: Int): Double = TODO("Not Implemented")
+private fun taxThreshold(year: Int): Double = TODO("Not Implemented")
+
+@Serializable
+data class Reading(
+    val customer: String,
+    val quantity: Int,
+    val month: Int,
+    val year: Int
+) {
+    fun baseCharge(): Double = baseRate(month = this.month, year = this.year) * this.quantity
+    val texableCharge
+        get() = 0.0.coerceAtMost(this.baseCharge() - taxThreshold(this.year))
+}
