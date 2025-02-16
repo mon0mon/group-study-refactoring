@@ -1,6 +1,9 @@
 package ch06.data
 
+import kotlinx.serialization.Contextual
+import kotlinx.serialization.Serializable
 import java.time.LocalDate
+import java.time.LocalDateTime
 
 data class Invoice(
     val customer: String,
@@ -41,3 +44,28 @@ data class Person(
     val firstName: String,
     val lastName: String
 )
+
+data class DateRange(
+    val startDate: LocalDate,
+    val endDate: LocalDate
+)
+
+@Serializable
+data class Station(
+    val name: String,
+    val readings: List<TemperatureData>
+)
+
+@Serializable
+data class TemperatureData (
+    val temp: Int,
+    @Contextual
+    val time: LocalDateTime
+)
+
+data class NumberRange(
+    val min: Int,
+    val max: Int
+) {
+    fun contains(value: Int): Boolean = (value >= this.min) && (value <= this.max)
+}
