@@ -1,0 +1,117 @@
+:toc:
+:doctype: book
+:icons: font
+:icon-set: font-awesome
+:source-highlighter: highlightjs
+:toclevels: 4
+:sectlinks:
+:author: "mon0mon"
+:hardbreaks:
+
+== 7.5 클래스 추출하기(Extract Class)
+
+> 반대 리팩터링: 클래스 인라인하기^7.6절^
+
+[open]
+.리팩토링 이전
+--
+[source,kotlin]
+----
+data class Person(
+    var name: String,
+    var officeAreaCode: String,
+    var officeNumber: String
+) {
+
+    val telephoneNumber: String
+        get() = "($officeAreaCode) $officeNumber"
+}
+----
+--
+
+[open]
+.리팩토링 이후
+--
+[source,kotlin]
+----
+class Person(
+    var name: String,
+    telephoneNumber: TelephoneNumber
+) {
+    private val _telephoneNumber = telephoneNumber
+
+    val telephoneNumber: String
+        get() = _telephoneNumber.toString()
+}
+
+data class TelephoneNumber(
+    var areaCode: String,
+    var number: String
+) {
+
+    override fun toString() = "($areaCode) $number"
+}
+----
+--
+
+=== 배경
+
+실무에서 코드를 작성하다보면, 클래스가 비대해져 분리해야할 필요가 있다
+특히 일부 데이터와 메서드를 따로 묶을 수 있다면, 분리해야할 시점이다
+함께 변경되거나 의존하는 데이터들도 함께 분리한다
+
+개발 후반에 접어들면서 서브 클래스가 만들어지는 방식에서 징후가 나타나기도 한다
+작은 일부의 기능만을 위해 서브 클래스를 만들거나, 확장해야 할 기능이 무엇인지에 따라 서브클래스 만드는 방식이 달라진다면, 클래스를 나눠야할 신호다
+
+=== 절차
+. 클래스의 역할을 분리할 방법을 정한다
+. 분리할 역할을 담당할 클래스를 새로 만든다
+** 원래 클래스에 남은 역할과 클래스 이름이 어울리지 않는다면 적절히 바꾼다
+. 원래 클래스의 생성자에서 새로운 클래스의 인스턴스를 생성하여 필드에 저장해둔다
+. 분리될 역할에 필요한 필드들을 새 클래스로 옮긴다(필드 옮기기^8.2절^). 하나씩 옮길 때마다 테스트한다
+. 양쪽 클래스의 인터페이스를 살펴보면서 불필요한 메서드를 제거하고, 이름도 새로운 환경에 맞게 바꾼다
+. 새 클래스를 외부로 노출할지 정한다. 노출하려거든 새 클래스에 참조를 값으로 바꾸기^9.4절^를 적용할지 고민해본다
+
+=== 예시
+
+[open]
+.리팩토링 이전
+--
+[source,kotlin]
+----
+data class Person(
+    var name: String,
+    var officeAreaCode: String,
+    var officeNumber: String
+) {
+
+    val telephoneNumber: String
+        get() = "($officeAreaCode) $officeNumber"
+}
+----
+--
+
+[open]
+.리팩토링 이후
+--
+[source,kotlin]
+----
+class Person(
+    var name: String,
+    telephoneNumber: TelephoneNumber
+) {
+    private val _telephoneNumber = telephoneNumber
+
+    val telephoneNumber: String
+        get() = _telephoneNumber.toString()
+}
+
+data class TelephoneNumber(
+    var areaCode: String,
+    var number: String
+) {
+
+    override fun toString() = "($areaCode) $number"
+}
+----
+--
