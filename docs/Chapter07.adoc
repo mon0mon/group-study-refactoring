@@ -32,5 +32,20 @@
 . 중개자 제거하기 ^7.8절^
 
 
+include::articles/ch07/ch0701.adoc[]
 
+include::articles/ch07/ch0702.adoc[]
 
+include::articles/ch07/ch0703.adoc[]
+
+include::articles/ch07/ch0704.adoc[]
+
+include::articles/ch07/ch0705.adoc[]
+
+include::articles/ch07/ch0706.adoc[]
+
+include::articles/ch07/ch0707.adoc[]
+
+include::articles/ch07/ch0708.adoc[]
+
+include::articles/ch07/ch0709.adoc[]
