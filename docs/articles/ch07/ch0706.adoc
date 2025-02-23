@@ -1,0 +1,102 @@
+:toc:
+:doctype: book
+:icons: font
+:icon-set: font-awesome
+:source-highlighter: highlightjs
+:toclevels: 4
+:sectlinks:
+:author: "mon0mon"
+:hardbreaks:
+
+== 7.6 클래스 인라인하기(Inline Class)
+
+> 반대 리팩터링: 클래스 추출하기^7.5절^
+
+[open]
+.리팩토링 이전
+--
+[source,kotlin]
+----
+class Person(
+    var name: String,
+    telephoneNumber: TelephoneNumber
+) {
+        private val _telephoneNumber = telephoneNumber
+
+        val telephoneNumber: String
+        get() = _telephoneNumber.toString()
+}
+
+data class TelephoneNumber(
+    var areaCode: String,
+    var number: String
+) {
+
+    override fun toString() = "($areaCode) $number"
+}
+----
+--
+
+[open]
+.리팩토링 이후
+--
+[source,kotlin]
+----
+data class Person(
+    var name: String,
+    var officeAreaCode: String,
+    var officeNumber: String
+) {
+
+    val telephoneNumber: String
+        get() = "($officeAreaCode) $officeNumber"
+}
+----
+--
+
+=== 배경
+
+클래스 인라인하기는 클래스 추출하기^7.5절^을 되돌리는 리팩터링
+두 클래스의 기능을 지금과 다르게 배분하고 싶을 때도, 클래스 인라인을 사용할 수 있음
+
+=== 절차
+. 소스 클래스의 각 public 메서드에 대응하는 메서드들을 타깃 클래스에 생성한다. 이 메서드들은 단순히 작업을 소스 클래스로 위임해야 한다
+. 소스 클래스의 메서드를 사용하는 코드를 모두 타깃 클래스의 위임 메서드를 사용하도록 바꾼다
+. 소스 클래스의 메서드와 필드를 모두 타깃 클래스로 옮긴다
+. 소스 클래스를 삭제
+
+=== 예시
+
+[open]
+.리팩토링 이전
+--
+[source,kotlin]
+----
+data class TrackingInformation (
+    val shippingCompany: String,
+    val trackingNumber: String
+) {
+    fun display() = "$shippingCompany: $trackingNumber"
+}
+
+data class Shipment(
+    var trackingInformation: TrackingInformation
+) {
+    fun trackingInfo() = trackingInformation.display()
+}
+----
+--
+
+[open]
+.리팩토링 이후
+--
+[source,kotlin]
+----
+data class Shipment(
+    val shippingCompany: String,
+    val trackingNumber: String
+) {
+    fun trackingInfo() = "$shippingCompany: $trackingNumber"
+}
+----
+--
