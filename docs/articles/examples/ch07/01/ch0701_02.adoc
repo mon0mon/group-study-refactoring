@@ -1,0 +1,99 @@
+:toc:
+:doctype: book
+:icons: font
+:icon-set: font-awesome
+:source-highlighter: highlightjs
+:toclevels: 4
+:sectlinks:
+:author: "mon0mon"
+:hardbreaks:
+
+==== 예시: 중첩된 레코드 캡슐화하기
+
+[open]
+.리팩토링 이전
+--
+[source,json]
+----
+{
+  "1920": {
+    "name": "마틴 파울러",
+    "id": 1920,
+    "usages": {
+      "2016": {
+        "1": 50,
+        "2": 55,
+        "3": 54,
+        "4": 86,
+        "5": 60,
+        "6": 19,
+        "7": 7,
+        "8": 69,
+        "9": 25,
+        "10": 67,
+        "11": 20,
+        "12": 63
+      },
+      "2015": {
+        "1": 70,
+        "2": 63,
+        "3": 46,
+        "4": 50,
+        "5": 60,
+        "6": 55,
+        "7": 60,
+        "8": 54,
+        "9": 58,
+        "10": 23,
+        "11": 54,
+        "12": 30
+      }
+    }
+  }
+}
+----
+--
+
+[open]
+.리팩토링 이후
+--
+[source,kotlin]
+----
+@Serializable
+data class ClientInformation(
+    val name: String,
+    val id: Int,
+    val usages: MutableMap<String, MutableMap<String, Int>>
+) {
+    fun getUsages(year: String, month: String): Int? {
+        return usages[year]?.get(month)
+    }
+
+    fun setUsages(year: String, month: String, value: Int) {
+        usages.computeIfAbsent(year) { mutableMapOf() }[month] = value
+    }
+
+    fun compareUsage(laterYear: String, month: String, amount: Int): CompareUsage {
+        val later = getUsages(laterYear, month)
+        val earlier = getUsages((laterYear.toInt() - 1).toString(), month)
+
+        return if (later != null && earlier != null) {
+            CompareUsage(laterAmount = later, change = later - earlier)
+        } else {
+            CompareUsage()
+        }
+    }
+}
+
+class CompareUsage(
+    val laterAmount: Int? = null,
+    val change: Int? = null
+)
+
+fun main() {
+    val clientInformation = Json.decodeFromString<Map<String, ClientInformation>>(jsonString)
+
+    logger.info { "clientInformation = $clientInformation" }
+}
+----
+--

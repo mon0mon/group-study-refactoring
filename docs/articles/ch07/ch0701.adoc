@@ -1,0 +1,97 @@
+:toc:
+:doctype: book
+:icons: font
+:icon-set: font-awesome
+:source-highlighter: highlightjs
+:toclevels: 4
+:sectlinks:
+:author: "mon0mon"
+:hardbreaks:
+
+== 7.1 레코드 캡슐화하기 (Encapsulate Record)
+
+> 1판에서의 이름 : 레코드를 데이터 클래스로 전환
+
+[open]
+.리팩토링 이전
+--
+[source,kotlin]
+----
+object Organization {
+    val name = "애크미 구스베리"
+    val country = "GB"
+}
+----
+--
+
+[open]
+.리팩토링 이후
+--
+[source,kotlin]
+----
+class Organization(
+    val name: String,
+    val country: String
+)
+----
+--
+
+=== 배경
+
+레코드::
+연관된 여러 데이터를 직관적으로 묶을 수 있는 데이터 구조
+
+하지만 계산해서 얻을 수 있는 값과 그렇지 않은 값을 명확히 구분하여 저장해야 함
+
+* 계산된 값: 다른 필드의 값을 바탕으로, 호출 시마다 계산되는 값
+* 그렇지 않은 값: 필드에 저장된 값을 호출 시마다 반환
+* link:https://kotlinlang.org/docs/properties.html#getters-and-setters[kotlin getters and setters]
+
+[open]
+.kotlin computed property 예시
+--
+[source,kotlin]
+----
+class Organization(
+    val name: String,
+    val country: String
+) {
+    val greetings: String
+        get() = "Hello, I'm $name live in $country!"
+}
+----
+--
+
+이러한 단점으로 인해, 가변 데이터를 저장 할 때는 레코드보다 [.underline]#객체# 가 더 적합
+
+객체를 사용하면 사용자 입장에서 데이터가 계산된 값인지 알 필요가 없음
+
+레코드 구조는 두 가지로 구분할 수 있음::
+* 필드 이름을 노출하는 형태
+* 필드 이름을 숨기고, 커스텀 이름을 사용하는 형태
+
+후자의 경우 주로 다음과 같은 형태로 제공
+
+* 해시 (hash)
+* 맵 (map)
+* 해시맵 (hashmap)
+* 딕셔너리 (dictionary)
+* 연관 배열 (associative array)
+
+=== 절차
+. 레코드를 담은 변수를 캡슐화^6.6절^한다
+** 레코드를 캡슐화하는 함수의 이름은 검색하기 쉽게 지어준다
+. 레코드를 감싼 단순한 클래스로 해당 변수의 내용을 교체, 원본 레코드를 반환하는 접근자를 정의하고, 변수를 캡슐화하는 함수들이 이 접근자를 사용하도록 수정
+. 테스트
+. 원본 레코드 대신 새로 정의한 클래스 타입의 객체를 반환하는 함수들을 새로 만든다
+. 레코드를 반환하는 예전 함수를 사용하는 코드를 `4` 에서 만든 새 함수를 사용하도록 바꾼다, 객체의 접근자를 사용하며 없을 경우 추가한다
+** 중첩된 구조처럼 복잡한 레코드의 경우, 먼저 데이터를 갱신하는 클라이언트들에 주의해서 살펴본다. 읽기 작업만 수행할 경우, 데이터 복제본이나 읽기 전용 프록시 반환을 고려
+. 클래스에서 원본 데이터를 반환하는 접근자와 (`1` 에서 검색하기 쉬운 이름을 붙여둔) 원본 레코드를 반환하는 함수들을 제거
+. 테스트
+. 레코드의 필드도 데이터 구조인 중첩 구조라면 레코드 캡슐화하기와 컬렉션 캡슐화하기^7.2절^를 재귀적으로 적용한다
+
+=== 예시
+
+include::../examples/ch07/01/ch0701_01.adoc[]
+
+include::../examples/ch07/01/ch0701_02.adoc[]

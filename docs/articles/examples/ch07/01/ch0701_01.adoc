@@ -1,0 +1,35 @@
+:toc:
+:doctype: book
+:icons: font
+:icon-set: font-awesome
+:source-highlighter: highlightjs
+:toclevels: 4
+:sectlinks:
+:author: "mon0mon"
+:hardbreaks:
+
+==== 예시: 간단한 레코드 캡슐화하기
+
+[open]
+.리팩토링 이전
+--
+[source,kotlin]
+----
+object Organization {
+    val name = "애크미 구스베리"
+    val country = "GB"
+}
+----
+--
+
+[open]
+.리팩토링 이후
+--
+[source,kotlin]
+----
+class Organization(
+    val name: String,
+    val country: String
+)
+----
+--
