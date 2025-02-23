@@ -4,7 +4,7 @@ package ch07.sec02
  * 소개
  */
 
-data class Person_01(
+data class Person01(
     var courses: List<Course> = listOf()
 )
 
@@ -13,7 +13,7 @@ data class Course(
     val isAdvanced: Boolean
 )
 
-class Person_02(
+class Person02(
     courses: MutableList<Course> = mutableListOf()
 ) {
     private val _courses = courses
