@@ -1,0 +1,134 @@
+:toc:
+:doctype: book
+:icons: font
+:icon-set: font-awesome
+:source-highlighter: highlightjs
+:toclevels: 4
+:sectlinks:
+:author: "mon0mon"
+:hardbreaks:
+
+== 7.7 위임 숨기기(Hide Delegate)
+
+> 반대 리팩터링: 중개자 제거하기^7.8절^
+
+[open]
+.리팩토링 이전
+--
+[source,kotlin]
+----
+data class Department(
+    val chargeCode: String,
+    val manager: String
+)
+
+data class Person(
+    val name: String,
+    val department: Department
+)
+----
+--
+
+[open]
+.리팩토링 이후
+--
+[source,kotlin]
+----
+data class Department(
+    val chargeCode: String,
+    val manager: String
+)
+
+data class Person(
+    val name: String,
+    private val department: Department
+) {
+    val manager: String
+        get() = department.manager
+}
+----
+--
+
+=== 배경
+
+모듈화 설계의 핵심은 [.underline]#캡슐화#
+
+캡슐화는 모듈들이 시스템의 결합도를 낮춰줌
+캡슐화가 잘 되어 있다면, 무언가 변경해야할 때 고려해야 할 모듈 수가 적어짐
+결과적으로 코드의 변경이 쉬워짐
+
+캡슐화는 필드를 숨기는 것 이상의 역할을 가지고 있음
+예를 들어 서버 객체의 필드가 가리키는 객체(위임 객체 delegate)의 메서드를 호출하려면, 클라이언트는 위임 객체에 대해 알아야 함
+위임 객체의 변경에 따라, 클라이언트도코드를 수정해야함
+
+이러한 의존성을 제거하기 위해서, 서버 자체에 위임 메서드를 만들어 위임 객체의 존재를 숨기는 방법이 있음
+위임 객체가 수정되더라도, 클라이언트의 코드는 수정할 필요가 없음
+
+[open]
+.다이어그램
+--
+[plantuml,hide-delegate,svg]
+----
+@startuml
+
+object "Client" as client
+class "Server" as server {
+    + aMethod()
+}
+class "Delegate" as delegate {
+    + aMethod()
+}
+
+note bottom of server: delegate.aMethod()
+
+client .> server
+server -> delegate
+
+@enduml
+----
+--
+
+=== 절차
+. 위임 객체의 각 메서드에 해당하는 위임 메서드를 서버에 생성한다
+. 클라이언트가 위임 객체 대신 서버를 호출하도록 수정한다. 하나씩 바꿀 때마다 테스트한다
+. 모두 수정했다면, 서버로부터 위임 객체를 얻는 접근자를 제거한다
+. 테스트한다
+
+=== 예시
+
+[open]
+.리팩토링 이전
+--
+[source,kotlin]
+----
+data class Department(
+    val chargeCode: String,
+    val manager: String
+)
+
+data class Person(
+    val name: String,
+    val department: Department
+)
+----
+--
+
+[open]
+.리팩토링 이후
+--
+[source,kotlin]
+----
+data class Department(
+    val chargeCode: String,
+    val manager: String
+)
+
+data class Person(
+    val name: String,
+    private val department: Department
+) {
+    val manager: String
+        get() = department.manager
+}
+----
+--
