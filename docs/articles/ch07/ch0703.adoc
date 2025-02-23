@@ -1,0 +1,92 @@
+:toc:
+:doctype: book
+:icons: font
+:icon-set: font-awesome
+:source-highlighter: highlightjs
+:toclevels: 4
+:sectlinks:
+:author: "mon0mon"
+:hardbreaks:
+
+== 7.3 기본형을 객체로 바꾸기 (Replace Primitive with Object)
+
+> 1판에서의 이름 : 데이터 값을 객체로 전환, 분류 부호를 클래스로 전환
+
+[open]
+.리팩토링 이전
+--
+[source,kotlin]
+----
+data class Order(
+    val priority: String
+)
+----
+--
+
+[open]
+.리팩토링 이후
+--
+[source,kotlin]
+----
+enum class OrderPriority {
+    NORMAL, HIGH, RUSH
+}
+
+data class Order(
+    val priority: OrderPriority
+) {
+    operator fun compareTo(orderPriority: OrderPriority): Int {
+        return priority.compareTo(orderPriority)
+    }
+}
+----
+--
+
+=== 배경
+
+개발 초기 단순한 정보들이, 개발이 진행됨에 따라 복잡하게 변경된다
+정수, 문자열, 배열 등의 원시형 데이터를 객체로 바꾸면 이런 변화에 대응하기 쉬워진다
+
+처음에는 단순히 원시형 데이터를 감싼 것과 마찬가지이므로 효과는 미미하다
+다만 프로그램이 커질 수록, 효과는 커진다
+
+=== 절차
+. 아직 변수를 캡슐화하지 않았다면 캡슐화^6.6절^한다
+. 단순한 값 클래스(value class)를 만든다. 생성자는 기존 값을 인수로 받아서 저장하고, 이 값을 반환하는 게터를 추가한다
+. 정적 검사를 수행한다
+. 값 클래스의 인스턴스를 새로 만들어서 필드에 저장하도록 세터를 수정한다. 이미 있다면 필드의 타입을 적절히 변경한다
+. 테스트한다
+. 함수 이름을 바꾸면^6.5절^ 원본 접근자의 동작을 더 잘 드러낼 수 있는지 검토한다
+** 참조를 값으로 바꾸거나^9.4절^ 값을 참조로 바꾸면^9.5절^ 새로 만든 객체의 역할(값 또는 참조 객체)이 더 잘 드러나는지 검토한다
+
+=== 예시
+
+[open]
+.리팩토링 이전
+--
+[source,kotlin]
+----
+data class Order(
+    val priority: String
+)
+----
+--
+
+[open]
+.리팩토링 이후
+--
+[source,kotlin]
+----
+enum class OrderPriority {
+    NORMAL, HIGH, RUSH
+}
+
+data class Order(
+    val priority: OrderPriority
+) {
+    operator fun compareTo(orderPriority: OrderPriority): Int {
+        return priority.compareTo(orderPriority)
+    }
+}
+----
+--
