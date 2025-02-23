@@ -1,0 +1,107 @@
+:toc:
+:doctype: book
+:icons: font
+:icon-set: font-awesome
+:source-highlighter: highlightjs
+:toclevels: 4
+:sectlinks:
+:author: "mon0mon"
+:hardbreaks:
+
+== 7.8 중개자 제거하기(Remove Middle Man)
+
+> 반대 리팩터링: 위임 숨기기^7.7절^
+
+[open]
+.리팩토링 이전
+--
+[source,kotlin]
+----
+data class Department(
+    val chargeCode: String,
+    val manager: String
+)
+
+data class Person(
+    val name: String,
+    private val department: Department
+) {
+    val manager: String
+        get() = department.manager
+}
+----
+--
+
+[open]
+.리팩토링 이후
+--
+[source,kotlin]
+----
+data class Department(
+    val chargeCode: String,
+    val manager: String
+)
+
+data class Person(
+    val name: String,
+    val department: Department
+)
+----
+--
+
+=== 배경
+
+위임 숨기기^7.7절^이 이점만 가지는 것은 아님
+클라이언트가 위임 객체의 또 다른 기능을 사용하려 할 때마다, 서버에 위임 메서드가 추가됨
+이 때 단순히 전달만 하는 위임 메서드가 많아지고, 클라이언트에서 직접 위임 객체를 호출하는 게 나을 수 있음
+
+항상 기준은 객관적이지 않지만, 필요하다면 리팩터링을 통해 균형을 맞추는 것이 좋음
+시스템이 바뀌면 _적절하다_ 는 기준은 바뀌기 마련
+
+> link:https://mangkyu.tistory.com/147[데메테르 법칙(Law of Demeter)]
+
+=== 절차
+. 위임 객체를 얻는 게터를 만든다
+. 위임 메서드를 호출하는 클라이언트가 모두 이 게터를 거치도록 수정
+. 모두 수정했다면 위임 메서드를 삭제한다
+** 위임 필드를 캡슐화^6.6절^한 다음, 이를 사용하는 모든 메서드를 인라인^6.2절^한다
+
+
+=== 예시
+
+[open]
+.리팩토링 이전
+--
+[source,kotlin]
+----
+data class Department(
+    val chargeCode: String,
+    val manager: String
+)
+
+data class Person(
+    val name: String,
+    private val department: Department
+) {
+    val manager: String
+        get() = department.manager
+}
+----
+--
+
+[open]
+.리팩토링 이후
+--
+[source,kotlin]
+----
+data class Department(
+    val chargeCode: String,
+    val manager: String
+)
+
+data class Person(
+    val name: String,
+    val department: Department
+)
+----
+--
