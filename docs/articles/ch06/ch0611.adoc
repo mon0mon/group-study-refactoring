@@ -151,4 +151,4 @@ class CommandLine(
 . 명령줄 인수의 구문을 분석해서 의미 추출
 . 추출된 정보를 이용하여 데이터를 적절히 가공
 
-include::../subsections/ch06/11/ch0611_01.adoc[]
+include::../examples/ch06/11/ch0611_01.adoc[]

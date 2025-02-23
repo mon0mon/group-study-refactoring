@@ -114,4 +114,4 @@ export function setDefaultOwner(arg) { defaultOwner = arg; }
 
 * python이나 오래된 JS에서는 언더스코어 (`-`) 를 사용해서 접근 제어를 나타내곤 했음
 
-include::../subsections/ch06/06/ch0606_01.adoc[]
+include::../examples/ch06/06/ch0606_01.adoc[]

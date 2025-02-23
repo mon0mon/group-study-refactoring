@@ -93,7 +93,7 @@ fun printDetails(invoice: Invoice, outstanding: Int) {
 
 . 추출한 코드 중 원본 함수의 지역 변수를 참조하거나 추출한 함수의 유효범위를 벗어나는 변수는 없는지 검사, 있다면 매개변수로 전달하기
 * 원본 함수의 중첩 함수로 추출할 때는 이런 문제가 생기지 않음
-* 사용하지만 값이 바뀌지 변수는 매개변수로 전달받기
+* 사용하지만 값이 바뀌지않는 변수는 매개변수로 전달받기
 * 추출한 코드에서만 사용하는 변수는 함수 안에서 선언하도록 수정
 * 값이 변경되는 변수 중에서 값으로 전달되는 것들은 주의해서 처리
 ** 변수가 하나일 경우에는 질의 함수로 추출해서 변수에 대입하기
@@ -113,8 +113,8 @@ fun printDetails(invoice: Invoice, outstanding: Int) {
 
 ### 예시
 
-include::../subsections/ch06/01/ch0601_01.adoc[]
+include::../examples/ch06/01/ch0601_01.adoc[]
 
-include::../subsections/ch06/01/ch0601_02.adoc[]
+include::../examples/ch06/01/ch0601_02.adoc[]
 
-include::../subsections/ch06/01/ch0601_03.adoc[]
+include::../examples/ch06/01/ch0601_03.adoc[]

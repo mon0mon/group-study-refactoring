@@ -15,7 +15,7 @@
 --
 [source,kotlin]
 ----
-data class Order_Old(
+data class Order(
     val quantity: Int,
     val itemPrice: Int
 ) {
@@ -33,7 +33,7 @@ data class Order_Old(
 --
 [source,kotlin]
 ----
-data class Order_Refacotred(
+data class Order(
     val quantity: Int,
     val itemPrice: Int
 ) {

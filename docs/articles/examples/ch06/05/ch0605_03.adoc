@@ -18,7 +18,7 @@
 data class Book(
     val reservations: MutableList<Customer>
 ) {
-    fun addReservation_Old(customer: Customer) {
+    fun addReservation(customer: Customer) {
         this.reservations.add(customer)
     }
 }
@@ -33,11 +33,11 @@ data class Book(
 data class Book(
     val reservations: MutableList<Customer>
 ) {
-    fun addReservation_Old(customer: Customer) {
+    fun addReservation(customer: Customer) {
         this.reservations.add(customer)
     }
 
-    fun addReservation_Refactored(customer: Customer, isPriority: Boolean) {
+    fun addReservation(customer: Customer, isPriority: Boolean) {
         require(isPriority || !isPriority)
         this.reservations.add(customer)
     }
